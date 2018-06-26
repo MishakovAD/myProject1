@@ -58,15 +58,14 @@ public class CostsBotTest extends TelegramLongPollingBot {
 			System.out.println("Long.toString(chatId) = " + Long.toString(chatId));
 			thread = new ThreadForUser(Long.toString(chatId), count);
 			thread.start();
+			chatIdThreadMap.put(chatId, thread);
 			thread.setChatId(chatId);
 			setId.add(chatId);
 		}
 		if (setId.contains(chatId)) {
-			//Нужно решить проблему с тем, чтобы данные добавлялись именно в нужный поток с Id
-			if (("Thread-" + chatId).equals(Thread.currentThread().getName())) {
+			//Нужно решить проблему с тем, чтобы данные добавлялись именно в нужный поток с Id			
 				ThreadForUser.setIndex(count);
 				thread.setChatId(chatId);
-			}
 		} else {
 			System.out.println("Long.toString(chatId) = " + Long.toString(chatId));
 			thread2 = new ThreadForUser(Long.toString(chatId), count);
