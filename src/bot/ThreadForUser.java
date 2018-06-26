@@ -13,7 +13,7 @@ public class ThreadForUser extends Thread {
 //	private Update update;
 	private Message message;
 	private Long chatId;
-	private ArrayList<String> textMessage;
+	private volatile ArrayList<String> textMessage;
 	private int counter = 0;
 	private static String messageTextForUser = "Привет,следуйте инструкциям! Для начала выберете что это: Доход или Расход?";
 	private boolean isFinish = true;
@@ -46,7 +46,7 @@ public class ThreadForUser extends Thread {
 	}
 
 	public void run() {
-		System.out.println(getChatId());
+		//Long id = CostsBotTest.chatIdThreadMap.get(chatId).chatId; //id пользователя, верно получаем
 		Thread.currentThread().setName("Thread-" + getChatId().toString());
 		System.out.println("Start thread! " + Thread.currentThread().getName());
 		textMessage = new ArrayList<String>();
@@ -54,8 +54,6 @@ public class ThreadForUser extends Thread {
 			try {
 					getIndex();
 					getChatId();
-					//System.out.println("getChatId(): " + getChatId());
-
 					message = CostsBotTest.updateIdArray.get(index-1).getEvent().getMessage();
 					textMessage.add(message.getText() + " / ");
 					counter += 1;
@@ -73,24 +71,25 @@ public class ThreadForUser extends Thread {
 					if (textMessage.size() > 3) {
 						// отправляем сообщение в БД (с записью ID), а так же очищаем массив
 						//textMessage.add(update.getMessage().getChatId().toString());
-						textMessage.add(" id = " + chatId);
+						textMessage.add(" id = " + getChatId());
 						// sql
 						textMessage.removeAll(textMessage);
 						CostsBotTest.setId.remove(chatId);
+						CostsBotTest.chatIdThreadMap.remove(chatId);
 						counter = 0;
 						System.out.println("Cleared!");
-						// isFinish = false;
+						isFinish = false;
 					}
 					
 			} catch (IndexOutOfBoundsException e) {
 				//System.out.println(e);
 			}
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try {
+//				Thread.sleep(100);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		}
 
 	}

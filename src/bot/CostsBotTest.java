@@ -30,7 +30,7 @@ public class CostsBotTest extends TelegramLongPollingBot {
 	public static ArrayList<Long> chatIdArray = new ArrayList<Long>();
 	public static ArrayList<UpdateId> updateIdArray = new ArrayList<UpdateId>();
 	public static Set<Long> setId = new LinkedHashSet<>();
-	ConcurrentHashMap<Long, Thread> chatIdThreadMap = new ConcurrentHashMap<>();
+	static ConcurrentHashMap<Long, ThreadForUser> chatIdThreadMap = new ConcurrentHashMap<>();
 	ThreadForUser thread;
 	ThreadForUser thread2;
 
@@ -48,31 +48,39 @@ public class CostsBotTest extends TelegramLongPollingBot {
 		s.remove(o);
 	}
 
-	public synchronized void onUpdateReceived(Update e) {
+	public void onUpdateReceived(Update e) {
 
 		// System.out.println("updateIdArray.size() = " + updateIdArray.size());
 		updateIdArray.add(new UpdateId(e.getMessage().getChatId(), e));
 		int count = updateIdArray.size();
 		chatId = e.getMessage().getChatId();
-		if (setId.isEmpty()) {
-			System.out.println("Long.toString(chatId) = " + Long.toString(chatId));
-			thread = new ThreadForUser(Long.toString(chatId), count);
-			thread.start();
-			chatIdThreadMap.put(chatId, thread);
-			thread.setChatId(chatId);
-			setId.add(chatId);
-		}
-		if (setId.contains(chatId)) {
-			//Нужно решить проблему с тем, чтобы данные добавлялись именно в нужный поток с Id			
-				ThreadForUser.setIndex(count);
-				thread.setChatId(chatId);
+//		if (chatIdThreadMap.isEmpty()) {
+//			//System.out.println("Long.toString(chatId) = " + Long.toString(chatId));
+//			thread = new ThreadForUser(Long.toString(chatId), count);
+//			chatIdThreadMap.put(chatId, thread);
+//			thread.start();
+//			thread.setChatId(chatId);
+//		}
+		if (chatIdThreadMap.containsKey(chatId)) {
+			// Нужно решить проблему с тем, чтобы данные добавлялись именно в нужный поток с
+			// Id
+			for (ConcurrentHashMap.Entry entry : chatIdThreadMap.entrySet()) {
+			    if (chatId.equals(entry.getKey())) {
+					thread = (ThreadForUser) entry.getValue();
+					System.out.println(thread.getName());
+					thread.setIndex(count);
+					thread.setChatId(chatId);
+			    }
+			}
+
 		} else {
 			System.out.println("Long.toString(chatId) = " + Long.toString(chatId));
-			thread2 = new ThreadForUser(Long.toString(chatId), count);
-			thread2.start();
-			thread2.setChatId(chatId);
-			setId.add(chatId);
+			thread = new ThreadForUser(Long.toString(chatId), count);
+			chatIdThreadMap.put(chatId, thread);
+			thread.start();			
+			thread.setChatId(chatId);
 		}
+		System.out.println("chatIdThreadMap.size() = " + chatIdThreadMap.size());
 
 	}
 
