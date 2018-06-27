@@ -67,9 +67,11 @@ public class CostsBotTest extends TelegramLongPollingBot {
 			for (ConcurrentHashMap.Entry entry : chatIdThreadMap.entrySet()) {
 			    if (chatId.equals(entry.getKey())) {
 					thread = (ThreadForUser) entry.getValue();
+					thread.setUpdate(e);
+					thread.setChatId(chatId);
 					System.out.println(thread.getName());
 					thread.setIndex(count);
-					thread.setChatId(chatId);
+					
 			    }
 			}
 
@@ -77,10 +79,12 @@ public class CostsBotTest extends TelegramLongPollingBot {
 			System.out.println("Long.toString(chatId) = " + Long.toString(chatId));
 			thread = new ThreadForUser(Long.toString(chatId), count);
 			chatIdThreadMap.put(chatId, thread);
-			thread.start();			
+			thread.setUpdate(e);
 			thread.setChatId(chatId);
+			thread.start();			
+			
 		}
-		System.out.println("chatIdThreadMap.size() = " + chatIdThreadMap.size());
+		//System.out.println("chatIdThreadMap.size() = " + chatIdThreadMap.size());
 
 	}
 

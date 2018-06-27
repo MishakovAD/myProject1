@@ -8,9 +8,7 @@ import org.telegram.telegrambots.api.objects.Update;
 import bot.CostsBotTest.UpdateId;
 
 public class ThreadForUser extends Thread {
-//	private String nameThread;
-//	private UpdateId updateId;
-//	private Update update;
+	private Update update;
 	private Message message;
 	private Long chatId;
 	private volatile ArrayList<String> textMessage;
@@ -18,7 +16,6 @@ public class ThreadForUser extends Thread {
 	private static String messageTextForUser = "Привет,следуйте инструкциям! Для начала выберете что это: Доход или Расход?";
 	private boolean isFinish = true;
 	private int index;
-	
 
 	public ThreadForUser(String name, int index) {
 		super(name);
@@ -37,28 +34,45 @@ public class ThreadForUser extends Thread {
 		index = index;
 	}
 
-	public Long getChatId() {
-		return chatId;
-	}
-
 	public void setChatId(Long chatId) {
 		this.chatId = chatId;
 	}
 
+	public Long getChatId() {
+		return chatId;
+	}
+
+	public Update getUpdate() {
+		return update;
+	}
+
+	public void setUpdate(Update update) {
+		this.update = update;
+	}
+
 	public void run() {
-		//Long id = CostsBotTest.chatIdThreadMap.get(chatId).chatId; //id пользователя, верно получаем
+		// Long id = CostsBotTest.chatIdThreadMap.get(chatId).chatId; //id пользователя,
+		// верно получаем
 		Thread.currentThread().setName("Thread-" + getChatId().toString());
 		System.out.println("Start thread! " + Thread.currentThread().getName());
 		textMessage = new ArrayList<String>();
+		textMessage.add(getChatId().toString());
+
 		while (isFinish) {
-			try {
-					getIndex();
-					getChatId();
-					message = CostsBotTest.updateIdArray.get(index-1).getEvent().getMessage();
+			// System.out.println(textMessage.get(0).equals(getChatId().toString()));
+			// System.out.println(textMessage.get(0).contains(getChatId().toString()));
+			if (textMessage.get(0).equals(getChatId().toString())) {
+				try {
+					index = getIndex();
+					chatId = getChatId();
+					// message = CostsBotTest.updateIdArray.get(index - 1).getEvent().getMessage();
+					update = getUpdate();
+					message = update.getMessage();
 					textMessage.add(message.getText() + " / ");
 					counter += 1;
 					System.out.println(textMessage);
-					CostsBotTest.updateIdArray.remove(index-1);
+					update = null;
+					CostsBotTest.updateIdArray.remove(index - 1);
 
 					if (counter == 1) {
 						messageTextForUser = "Введите с обычной клавиатуры сумму: ";
@@ -68,9 +82,9 @@ public class ThreadForUser extends Thread {
 						messageTextForUser = "Спасибо! Чтобы создать новую запись, напиши \"Привет\". ";
 					}
 
-					if (textMessage.size() > 3) {
+					if (textMessage.size() > 6) {
 						// отправляем сообщение в БД (с записью ID), а так же очищаем массив
-						//textMessage.add(update.getMessage().getChatId().toString());
+						// textMessage.add(update.getMessage().getChatId().toString());
 						textMessage.add(" id = " + getChatId());
 						// sql
 						textMessage.removeAll(textMessage);
@@ -80,16 +94,22 @@ public class ThreadForUser extends Thread {
 						System.out.println("Cleared!");
 						isFinish = false;
 					}
-					
-			} catch (IndexOutOfBoundsException e) {
-				//System.out.println(e);
+
+				} catch (IndexOutOfBoundsException e) {
+					// System.out.println(e);
+				} catch (NullPointerException e) {
+					// System.out.println(e);
+				}
+
+			} else {
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-//			try {
-//				Thread.sleep(100);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+
 		}
 
 	}
