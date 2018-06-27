@@ -1,9 +1,6 @@
 package bot;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -12,13 +9,11 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
-import com.mysql.cj.Messages;
 
 public class CostsBotTest extends TelegramLongPollingBot {
-	private Long chatId;
+	static Long chatId;
 	static ConcurrentHashMap<Long, ThreadForUser> chatIdThreadMap = new ConcurrentHashMap<>();
 	ThreadForUser thread;
-
 	static ConcurrentHashMap<Long, Integer> counterMap = new ConcurrentHashMap<>(); // счетчик сообщений для каждого
 																					// пользователя
 
@@ -48,7 +43,6 @@ public class CostsBotTest extends TelegramLongPollingBot {
 							Integer count = (Integer) objCounter.getValue();
 							count++;
 							text = CounterEvents.messages.get(count);
-							thread.setCounter(count);
 							counterMap.put(chatId, count);
 						}
 					}
@@ -81,8 +75,7 @@ public class CostsBotTest extends TelegramLongPollingBot {
 		SendMessage s = new SendMessage();
 		s.enableMarkdown(true);
 		// Обязательно строчку ниже менять на нормального бота!!!!
-		// BotKeyboardTest.setButtons(s); // обращаемся к клавиатуре в классе
-		// BotKeyboard
+		 BotKeyboardTest.setButtons(s); // обращаемся к клавиатуре в классе BotKeyboard
 		s.setChatId(msg.getChatId());
 
 		s.setText(text);

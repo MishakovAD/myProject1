@@ -9,16 +9,10 @@ public class ThreadForUser extends Thread {
 	private Message message;
 	private Long chatId;
 	private volatile ArrayList<String> textMessage;
-	private static String messageTextForUser;
 	private boolean isFinish = true;
-	private Integer counter;
 
 	public ThreadForUser(String name) {
 		super(name);
-	}
-
-	public static String getMessageTextForUser() {
-		return messageTextForUser;
 	}
 	
 	public void setChatId(Long chatId) {
@@ -37,13 +31,6 @@ public class ThreadForUser extends Thread {
 		this.update = update;
 	}	
 	
-	public void setCounter(Integer counter) {
-		this.counter = counter;
-	}
-
-	public Integer getCounter() {
-		return counter;
-	}
 
 
 	public void run() {
@@ -57,20 +44,8 @@ public class ThreadForUser extends Thread {
 					chatId = getChatId();
 					update = getUpdate();
 					message = update.getMessage();
-					
-//					if (getCounter() == 1) {
-//						messageTextForUser = "Привет,следуйте инструкциям! Для начала выберете что это: Доход или Расход?";
-//					} else if (getCounter() == 2) {
-//						messageTextForUser = "Введите с обычной клавиатуры сумму: ";
-//					} else if (getCounter() == 3) {
-//						messageTextForUser = "Выберете: ";
-//					} else if (getCounter() == 4) {
-//						messageTextForUser = "Спасибо! Чтобы создать новую запись, напиши \"Привет\". ";
-//					}
-					
 					textMessage.add(message.getText() + " / ");					
 					System.out.println(textMessage);
-					System.out.println("counter = " + getCounter());
 					update = null;					
 
 					if (textMessage.size() == 5) {
@@ -81,9 +56,7 @@ public class ThreadForUser extends Thread {
 						textMessage.removeAll(textMessage);
 						CostsBotTest.chatIdThreadMap.remove(chatId);
 						CostsBotTest.counterMap.remove(chatId);
-						counter = 0;
 						System.out.println("Cleared!");
-						messageTextForUser = "Привет,следуйте инструкциям! Для начала выберете что это: Доход или Расход?";
 						isFinish = false;
 					}
 
