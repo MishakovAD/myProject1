@@ -56,6 +56,8 @@ public class ThreadForUser extends Thread {
 						textMessage.removeAll(textMessage);
 						CostsBotTest.chatIdThreadMap.remove(chatId);
 						CostsBotTest.counterMap.remove(chatId);
+						CostsBotTest.flagConsumptionMap.remove(chatId);
+						CostsBotTest.flagIncomeMap.remove(chatId);
 						System.out.println("Cleared!");
 						isFinish = false;
 					}

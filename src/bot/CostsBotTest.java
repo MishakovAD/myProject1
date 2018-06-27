@@ -12,10 +12,15 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 public class CostsBotTest extends TelegramLongPollingBot {
 	static Long chatId;
-	static ConcurrentHashMap<Long, ThreadForUser> chatIdThreadMap = new ConcurrentHashMap<>();
+	static ConcurrentHashMap<Long, ThreadForUser> chatIdThreadMap = new ConcurrentHashMap<>(); //потокобезопасное хранилище всех нитей,которые запущены
 	ThreadForUser thread;
-	static ConcurrentHashMap<Long, Integer> counterMap = new ConcurrentHashMap<>(); // счетчик сообщений дл€ каждого
-																					// пользовател€
+	static ConcurrentHashMap<Long, Integer> counterMap = new ConcurrentHashMap<>(); // счетчик сообщений дл€ каждого пользовател€
+	
+	// хранилище флагов, нужно дл€ того,чтобы правильно определ€ть набор клавиатуры
+	static ConcurrentHashMap<Long, Boolean> flagIncomeMap = new ConcurrentHashMap<>(); 
+	static ConcurrentHashMap<Long, Boolean> flagConsumptionMap = new ConcurrentHashMap<>(); 
+	public static boolean isIncome = false; //ƒоход
+	public static boolean isConsumption = false; //–асход
 
 	public String getBotToken() {
 		// System.out.println("Ready! Token");
@@ -28,9 +33,20 @@ public class CostsBotTest extends TelegramLongPollingBot {
 	}
 
 	public void onUpdateReceived(Update e) {
+		//–азличные проверки и заполнение необходимыми данными
+		//“ипа флагов, или заполнение массива ответов пользователю
+		// ************************************************************************//
 		if(CounterEvents.messages.isEmpty()) {
 			CounterEvents.addMessages();
 		}
+			if (e.getMessage().getText().equals("ƒоход")) {
+				isIncome = true;
+				flagIncomeMap.put(e.getMessage().getChatId(), isIncome);
+			} else if (e.getMessage().getText().equals("–асход")) {
+				isConsumption = true;
+				flagConsumptionMap.put(e.getMessage().getChatId(), isIncome);
+			}		
+		// ************************************************************************//
 		String text = null;
 		chatId = e.getMessage().getChatId();
 		if (chatIdThreadMap.containsKey(chatId)) {
@@ -75,7 +91,7 @@ public class CostsBotTest extends TelegramLongPollingBot {
 		SendMessage s = new SendMessage();
 		s.enableMarkdown(true);
 		// ќб€зательно строчку ниже мен€ть на нормального бота!!!!
-		 BotKeyboardTest.setButtons(s); // обращаемс€ к клавиатуре в классе BotKeyboard
+		 BotKeyboardTest.setButtons(s); // обращаемс€ к клавиатуре в классе		// BotKeyboard
 		s.setChatId(msg.getChatId());
 
 		s.setText(text);

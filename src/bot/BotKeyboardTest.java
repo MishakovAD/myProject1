@@ -10,6 +10,37 @@ import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardButto
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 
 public class BotKeyboardTest {
+	
+	public static boolean getIncome() {
+		Boolean flag = null;
+				for (ConcurrentHashMap.Entry objCounter : CostsBotTest.flagIncomeMap.entrySet()) {
+					if (CostsBotTest.chatId.equals(objCounter.getKey())) {
+						flag = (Boolean) objCounter.getValue();
+						return flag;
+					}
+					else {
+						flag = false;
+					}
+				}
+				System.out.println(flag);
+				return flag;
+	}
+	
+	public static boolean getConsumption() {
+		Boolean flag = null;
+		for (ConcurrentHashMap.Entry objCounter : CostsBotTest.flagConsumptionMap.entrySet()) {
+			if (CostsBotTest.chatId.equals(objCounter.getKey())) {
+				flag = (Boolean) objCounter.getValue(); 
+			}
+			else {
+				flag = false;
+			}
+		}
+		System.out.println(flag);
+		return flag;
+		
+	}
+	
 	public static synchronized void setButtons(SendMessage sendMessage) {
 		for (ConcurrentHashMap.Entry objCounter : CostsBotTest.counterMap.entrySet()) {
 			if (CostsBotTest.chatId.equals(objCounter.getKey())) {
@@ -41,7 +72,7 @@ public class BotKeyboardTest {
 					
 					// и устанваливаем этот список нашей клавиатуре
 					replyKeyboardMarkup.setKeyboard(keyboard);
-				} else if (count == 2) {
+				} else if (count == 2 && getIncome()) {
 					ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
 					sendMessage.setReplyMarkup(replyKeyboardMarkup);
 					replyKeyboardMarkup.setSelective(true);
@@ -50,6 +81,20 @@ public class BotKeyboardTest {
 					List<KeyboardRow> keyboard = new ArrayList<>();
 					KeyboardRow keyboardFirstRow = new KeyboardRow();
 					keyboardFirstRow.add(new KeyboardButton("Зарплата"));
+					KeyboardRow keyboardSecondRow = new KeyboardRow();
+					keyboardSecondRow.add(new KeyboardButton("Мелкие"));
+					keyboard.add(keyboardFirstRow);
+					keyboard.add(keyboardSecondRow);
+					replyKeyboardMarkup.setKeyboard(keyboard);
+				} else if (count == 2 && getConsumption()) {
+					ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+					sendMessage.setReplyMarkup(replyKeyboardMarkup);
+					replyKeyboardMarkup.setSelective(true);
+					replyKeyboardMarkup.setResizeKeyboard(true);
+					replyKeyboardMarkup.setOneTimeKeyboard(false);
+					List<KeyboardRow> keyboard = new ArrayList<>();
+					KeyboardRow keyboardFirstRow = new KeyboardRow();
+					keyboardFirstRow.add(new KeyboardButton("Магнит"));
 					KeyboardRow keyboardSecondRow = new KeyboardRow();
 					keyboardSecondRow.add(new KeyboardButton("Пятерочка"));
 					keyboard.add(keyboardFirstRow);

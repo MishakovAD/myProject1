@@ -9,7 +9,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 public class CostsBot extends TelegramLongPollingBot {
-	private Long chatId;
+	static Long chatId;
 	static ConcurrentHashMap<Long, ThreadForUser> chatIdThreadMap = new ConcurrentHashMap<>();
 	ThreadForUser thread;
 	static ConcurrentHashMap<Long, Integer> counterMap = new ConcurrentHashMap<>(); // счетчик сообщений для каждого
@@ -26,7 +26,7 @@ public class CostsBot extends TelegramLongPollingBot {
 	}
 
 	public void onUpdateReceived(Update e) {
-		if (CounterEvents.messages.isEmpty()) {
+		if(CounterEvents.messages.isEmpty()) {
 			CounterEvents.addMessages();
 		}
 		String text = null;
@@ -47,7 +47,7 @@ public class CostsBot extends TelegramLongPollingBot {
 					// ************************************************************************//
 					thread.setUpdate(e);
 					thread.setChatId(chatId);
-					// System.out.println(thread.getName());
+					//System.out.println(thread.getName());
 					sendMsg(e.getMessage(), text);
 				}
 			}
@@ -58,7 +58,7 @@ public class CostsBot extends TelegramLongPollingBot {
 			counterMap.put(chatId, count);
 			text = CounterEvents.messages.get(count);
 			// ************************************************************************//
-			// System.out.println("Long.toString(chatId) = " + Long.toString(chatId));
+			//System.out.println("Long.toString(chatId) = " + Long.toString(chatId));
 			thread = new ThreadForUser(Long.toString(chatId));
 			chatIdThreadMap.put(chatId, thread);
 			thread.setUpdate(e);
@@ -73,8 +73,7 @@ public class CostsBot extends TelegramLongPollingBot {
 		SendMessage s = new SendMessage();
 		s.enableMarkdown(true);
 		// Обязательно строчку ниже менять на нормального бота!!!!
-		// BotKeyboardTest.setButtons(s); // обращаемся к клавиатуре в классе
-		// BotKeyboard
+		 BotKeyboard.setButtons(s); // обращаемся к клавиатуре в классе BotKeyboard
 		s.setChatId(msg.getChatId());
 
 		s.setText(text);
