@@ -13,8 +13,8 @@ public class BotKeyboard {
 	
 	public static boolean getIncome() {
 		Boolean flag = false;
-				for (ConcurrentHashMap.Entry objCounter : CostsBotTest.flagIncomeMap.entrySet()) {
-					if (CostsBotTest.chatId.equals(objCounter.getKey())) {
+				for (ConcurrentHashMap.Entry objCounter : CostsBot.flagIncomeMap.entrySet()) {
+					if (CostsBot.chatId.equals(objCounter.getKey())) {
 						flag = (Boolean) objCounter.getValue();
 						return flag;
 					}
@@ -28,8 +28,8 @@ public class BotKeyboard {
 	
 	public static boolean getConsumption() {
 		Boolean flag = false;
-		for (ConcurrentHashMap.Entry objCounter : CostsBotTest.flagConsumptionMap.entrySet()) {
-			if (CostsBotTest.chatId.equals(objCounter.getKey())) {
+		for (ConcurrentHashMap.Entry objCounter : CostsBot.flagConsumptionMap.entrySet()) {
+			if (CostsBot.chatId.equals(objCounter.getKey())) {
 				flag = (Boolean) objCounter.getValue(); 
 			}
 			else {
@@ -42,8 +42,8 @@ public class BotKeyboard {
 	}
 	
 	public static synchronized void setButtons(SendMessage sendMessage) {
-		for (ConcurrentHashMap.Entry objCounter : CostsBotTest.counterMap.entrySet()) {
-			if (CostsBotTest.chatId.equals(objCounter.getKey())) {
+		for (ConcurrentHashMap.Entry objCounter : CostsBot.counterMap.entrySet()) {
+			if (CostsBot.chatId.equals(objCounter.getKey())) {
 				Integer count = (Integer) objCounter.getValue();
 				if (count == 0) {
 					ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
@@ -108,9 +108,9 @@ public class BotKeyboard {
 					replyKeyboardMarkup.setOneTimeKeyboard(false);
 					List<KeyboardRow> keyboard = new ArrayList<>();
 					KeyboardRow keyboardFirstRow = new KeyboardRow();
-					keyboardFirstRow.add(new KeyboardButton("Стоп"));
+					keyboardFirstRow.add(new KeyboardButton("/statistic"));
 					KeyboardRow keyboardSecondRow = new KeyboardRow();
-					keyboardSecondRow.add(new KeyboardButton("Stop"));
+					keyboardSecondRow.add(new KeyboardButton("/newCost"));
 					keyboard.add(keyboardFirstRow);
 					keyboard.add(keyboardSecondRow);
 					replyKeyboardMarkup.setKeyboard(keyboard);

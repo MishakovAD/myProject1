@@ -64,7 +64,7 @@ public class DataBase {
 //				nameUser = rs.getString(4);
 //			}
 			//Тестовая версия бота
-			if (CostsBotTest.ChatId == rs.getInt(2)) {
+			if (CostsBotTest.chatId == rs.getInt(2)) {
 				checkUser = true;
 				nameUser = rs.getString(4);
 			}
@@ -83,7 +83,7 @@ public class DataBase {
 		statement = con.createStatement();
 
 		String SQL_insert_new_user = "insert into costs (IDFromTelegramBot, DateCreated, Name, Amount, Cause)"
-				+ " values (" + CostsBot.ChatId + ", 20180613000001, '" + CostsBot.Name + "', 0, 'Registration');";
+				+ " values (" + CostsBot.chatId + ", 20180613000001, '" + CostsBot.nameUser + "', 0, 'Registration');";
 		statement.execute(SQL_insert_new_user);
 	}
 
@@ -106,7 +106,7 @@ public class DataBase {
 		System.out.println("Date: " + date);
 		
 		String SQL_insert_cost = "insert into costs (IDFromTelegramBot, DateCreated, Name, Amount, Cause)" + " values ("
-				+ CostsBot.ChatId + ", " + date + ", '" + nameUser + "', " + amount + ", '" + cause + "');";
+				+ CostsBot.chatId + ", " + date + ", '" + nameUser + "', " + amount + ", '" + cause + "');";
 		statement.execute(SQL_insert_cost);
 	}
 	

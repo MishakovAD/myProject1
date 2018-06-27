@@ -55,10 +55,11 @@ public class ThreadForUser extends Thread {
 						textMessage.add(" id = " + getChatId());
 						// sql
 						textMessage.removeAll(textMessage);
-						CostsBotTest.chatIdThreadMap.remove(chatId);
-						CostsBotTest.counterMap.remove(chatId);
-						CostsBotTest.flagConsumptionMap.remove(chatId);
-						CostsBotTest.flagIncomeMap.remove(chatId);
+						//“≈—“Œ¬€≈ Ã≈Õﬂ≈Ã Õ¿ Œ¡€◊Õ€≈ » Õ¿Œ¡Œ–Œ“
+						CostsBot.chatIdThreadMap.remove(chatId);
+						CostsBot.counterMap.remove(chatId);
+						CostsBot.flagConsumptionMap.remove(chatId);
+						CostsBot.flagIncomeMap.remove(chatId);
 						System.out.println("Cleared!");
 						isFinish = false;
 					}

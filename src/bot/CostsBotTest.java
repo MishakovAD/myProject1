@@ -11,6 +11,7 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 public class CostsBotTest extends TelegramLongPollingBot {
 	static Long chatId;
+	static String nameUser;
 	static ConcurrentHashMap<Long, ThreadForUser> chatIdThreadMap = new ConcurrentHashMap<>(); // потокобезопасное
 																								// хранилище всех
 																								// нитей,которые
