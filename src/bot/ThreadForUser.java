@@ -47,7 +47,8 @@ public class ThreadForUser extends Thread {
 					textMessage.add(message.getText() + " / ");					
 					System.out.println(textMessage);
 					update = null;					
-
+					
+					//Все Тестовые классы поменять на обычные!
 					if (textMessage.size() == 5) {
 						// отправляем сообщение в БД (с записью ID), а так же очищаем массив
 						// textMessage.add(update.getMessage().getChatId().toString());

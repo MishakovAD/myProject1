@@ -12,7 +12,7 @@ import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 public class BotKeyboardTest {
 	
 	public static boolean getIncome() {
-		Boolean flag = null;
+		Boolean flag = false;
 				for (ConcurrentHashMap.Entry objCounter : CostsBotTest.flagIncomeMap.entrySet()) {
 					if (CostsBotTest.chatId.equals(objCounter.getKey())) {
 						flag = (Boolean) objCounter.getValue();
@@ -27,7 +27,7 @@ public class BotKeyboardTest {
 	}
 	
 	public static boolean getConsumption() {
-		Boolean flag = null;
+		Boolean flag = false;
 		for (ConcurrentHashMap.Entry objCounter : CostsBotTest.flagConsumptionMap.entrySet()) {
 			if (CostsBotTest.chatId.equals(objCounter.getKey())) {
 				flag = (Boolean) objCounter.getValue(); 
@@ -108,9 +108,9 @@ public class BotKeyboardTest {
 					replyKeyboardMarkup.setOneTimeKeyboard(false);
 					List<KeyboardRow> keyboard = new ArrayList<>();
 					KeyboardRow keyboardFirstRow = new KeyboardRow();
-					keyboardFirstRow.add(new KeyboardButton("Стоп"));
+					keyboardFirstRow.add(new KeyboardButton("/statistic"));
 					KeyboardRow keyboardSecondRow = new KeyboardRow();
-					keyboardSecondRow.add(new KeyboardButton("Stop"));
+					keyboardSecondRow.add(new KeyboardButton("/newCost"));
 					keyboard.add(keyboardFirstRow);
 					keyboard.add(keyboardSecondRow);
 					replyKeyboardMarkup.setKeyboard(keyboard);
