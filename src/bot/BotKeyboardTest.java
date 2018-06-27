@@ -12,7 +12,7 @@ public class BotKeyboardTest {
 	public static synchronized void setButtons(SendMessage sendMessage) {
 		//System.out.println("Start setButtons");
 			// Создаем клавиуатуру
-		if(CostsBotTest.textArray.size() == 0) {
+		if(ThreadForUser.counter == 0) {
 			ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
 			sendMessage.setReplyMarkup(replyKeyboardMarkup);
 			replyKeyboardMarkup.setSelective(true);
