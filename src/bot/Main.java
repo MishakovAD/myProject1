@@ -1,4 +1,14 @@
 package bot;
+// наъгюрекэмн!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//опх сярюмнбйе MySQL бшярюбхрэ опюбхкэмсч йндхпнбйс х опнбепхрэ
+//наъгюрекэмн!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+import java.sql.SQLException;
+
+import org.telegram.telegrambots.ApiContextInitializer;
+import org.telegram.telegrambots.TelegramBotsApi;
+import org.telegram.telegrambots.exceptions.TelegramApiException;
+
 
 import java.sql.SQLException;
 
@@ -12,7 +22,7 @@ public class Main {
 		TelegramBotsApi botapi = new TelegramBotsApi();
 		System.out.println("Reg Bot");
 		try {
-			botapi.registerBot(new CostsBotTest());
+			botapi.registerBot(new CostsBot());
 		} catch (TelegramApiException e) {
 			e.printStackTrace();
 		}

@@ -13,6 +13,7 @@ public class DataBase {
 	private static String username = "root";
 	private static String password = "root";
 	private static String nameUser;
+	private static String typeCost;
 
 	static boolean checkUser = false;
 
@@ -31,24 +32,23 @@ public class DataBase {
 		Statement statement = null;
 		statement = con.createStatement();
 //	// Создание таблицы в БД
-//		 String SQL = "CREATE TABLE costs " +
-//		 "(id INTEGER not NULL AUTO_INCREMENT, " +
-//		 " IDFromTelegramBot INTEGER not NULL, " +
-//		 " DateCreated DATE not NULL, " +
-//		 " Name VARCHAR (50), " +
-//		 " Amount INTEGER not NULL, " +
-//		 " Cause VARCHAR (1000), " +
-//		 " PRIMARY KEY (id))";
-//		
-//		 statement.executeUpdate(SQL);
-//		 System.out.println("Table successfully created...");
+		String SQL = "CREATE TABLE Costs " +
+				 "(id INTEGER not NULL AUTO_INCREMENT, " +
+				 " idFromTelegramBot INTEGER not NULL, " +
+				 " dateCreated DATE not NULL, " +
+				 " userName VARCHAR (50), " +
+				 " typeCost VARCHAR (50), " +
+				 " amount INTEGER not NULL, " +
+				 " cause VARCHAR (1000), " +
+				 " PRIMARY KEY (id))";
+		
+		 statement.executeUpdate(SQL);
+		 System.out.println("Table successfully created...");
 	}
 
 	// Проверка: зарегестрирован ли уже такой пользователь.
-	public static void checkUser() throws SQLException, InstantiationException, IllegalAccessException {
-		//System.out.println("Start check!");
+	public static boolean checkUser(Long id) throws SQLException, InstantiationException, IllegalAccessException {
 		Connection con = DriverManager.getConnection(url, username, password);
-		//System.out.println("Connected.");
 
 		Statement statement = null;
 		statement = con.createStatement();
@@ -59,31 +59,37 @@ public class DataBase {
 			//Вывод данных (пока заккоменчен,чтобы не мешался)
 //			System.out.println("Данные: " + rs.getInt(1) + ", " + rs.getInt(2) + ", " + rs.getString(3) + ", "
 //					+ rs.getString(4) + ", " + rs.getInt(5) + ", " + rs.getString(6) + ", ");
-//			if (CostsBot.ChatId == rs.getInt(2)) {
-//				checkUser = true;
-//				nameUser = rs.getString(4);
-//			}
-			//Тестовая версия бота
-			if (CostsBotTest.chatId == rs.getInt(2)) {
-				checkUser = true;
+			if (id == rs.getInt(2)) {
+				//checkUser = true;
 				nameUser = rs.getString(4);
+				System.out.println(nameUser + ": Пользователь уже зарегестрирован!");
+				return true;
 			}
+			else {
+				return false;
+			}
+			
 		}
-		System.out.println(nameUser + ": Пользователь уже зарегестрирован!");
-		System.out.println("Переменная CheckUser: " + DataBase.checkUser);
+		return false;
 	}
 
 	public static void regNewUser() throws SQLException, InstantiationException, IllegalAccessException {
 		// Добавить и распарсить правильно дату,чтобы была возможность отслеживать дату
 		// регистрации пользователя
 		Connection con = DriverManager.getConnection(url, username, password);
-		System.out.println("Connected.");
+		System.out.println("Регистрация нового пользователя!");
 
 		Statement statement = null;
 		statement = con.createStatement();
 
-		String SQL_insert_new_user = "insert into costs (IDFromTelegramBot, DateCreated, Name, Amount, Cause)"
-				+ " values (" + CostsBot.chatId + ", 20180613000001, '" + CostsBot.nameUser + "', 0, 'Registration');";
+		String SQL_insert_new_user = "insert into Costs (idFromTelegramBot, dateCreated, userName, "
+				+ "typeCost, amount, cause)"
+				+ " values (" + CostsBot.chatId + ", now(), '"
+				+ CostsBot.nameUser + "', 'reg', 0, 'Registration');";
+		
+		System.out.println("ID: " + CostsBot.chatId);
+		System.out.println("Name: " + CostsBot.nameUser);
+		
 		statement.execute(SQL_insert_new_user);
 	}
 
@@ -96,6 +102,8 @@ public class DataBase {
 		statement = con.createStatement();
 
 		// Получаем содержимое текста
+		//олучение данных поменять. Сейчас вид  другой. 
+		//Лучше вообще сделать отдельным методом или дажеклассом на обработку
 		String amount;
 		String cause;
 		int indexOfSpace = text.indexOf(" "); // индекс символа, разделяющего сумму и покупки
@@ -105,11 +113,19 @@ public class DataBase {
 		String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
 		System.out.println("Date: " + date);
 		
-		String SQL_insert_cost = "insert into costs (IDFromTelegramBot, DateCreated, Name, Amount, Cause)" + " values ("
-				+ CostsBot.chatId + ", " + date + ", '" + nameUser + "', " + amount + ", '" + cause + "');";
+		//Вопрос, где и как лучше получать имя. Сейчас, при вставке новой записи, или же потом, при выводе статистики
+		//Пока проверяю сейчас и вставляю методом
+		//typeCost, как и все остальное будем получать отдельным методом из массива, в который будем сохранять данные.
+		checkUser(CostsBot.chatId);
+		//Вместо переменной date попробуем функцию now(). Распознает или нет, увидим
+		String SQL_insert_cost = "insert into Costs (idFromTelegramBot, dateCreated, userName, "
+				+ "typeCost, amount, cause)" + " values ("
+				+ CostsBot.chatId + ", " + "now()" + ", '" 
+				+ nameUser + "', '" + typeCost + "', "  + amount + ", '" + cause + "');";
 		statement.execute(SQL_insert_cost);
 	}
 	
+	//Получение всей информации из БД
 	public static void getDBData() throws SQLException, InstantiationException, IllegalAccessException {
 		Connection con = DriverManager.getConnection(url, username, password);
 		Statement statement = null;

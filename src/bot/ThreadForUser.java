@@ -52,7 +52,8 @@ public class ThreadForUser extends Thread {
 					if (textMessage.size() == 5) {
 						// отправляем сообщение в БД (с записью ID), а так же очищаем массив
 						// textMessage.add(update.getMessage().getChatId().toString());
-						textMessage.add(" id = " + getChatId());
+						// sql
+						
 						// sql
 						textMessage.removeAll(textMessage);
 						//ТЕСТОВЫЕ МЕНЯЕМ НА ОБЫЧНЫЕ И НАОБОРОТ
@@ -72,7 +73,7 @@ public class ThreadForUser extends Thread {
 
 			} else {
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(5000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
