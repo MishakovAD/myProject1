@@ -61,7 +61,7 @@ public class CostsBot extends TelegramLongPollingBot {
 
 		// Учим бота реагировать только на команды
 		// *****************COMMANDS**********************//
-		if (e.getMessage().getText().equals("/newCosts")) {
+		//if (e.getMessage().getText().equals("/newCosts")) {
 			if (chatIdThreadMap.containsKey(chatId)) {
 				for (ConcurrentHashMap.Entry entry : chatIdThreadMap.entrySet()) {
 					if (chatId.equals(entry.getKey())) {
@@ -100,7 +100,7 @@ public class CostsBot extends TelegramLongPollingBot {
 				thread.start();
 				sendMsg(e.getMessage(), text);
 			}
-		}
+		//}
 		// *****************COMMANDS*КОНЕЦ*****************//
 	}
 

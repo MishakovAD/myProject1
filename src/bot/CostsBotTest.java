@@ -62,7 +62,7 @@ public class CostsBotTest extends TelegramLongPollingBot {
 						if (chatId.equals(objCounter.getKey())) {
 							Integer count = (Integer) objCounter.getValue();
 							count++;
-							text = CounterEvents.messages.get(count);
+							//text = CounterEvents.messages.get(count);
 							counterMap.put(chatId, count);
 						}
 					}
