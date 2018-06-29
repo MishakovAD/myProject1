@@ -48,7 +48,7 @@ public class CostsBot extends TelegramLongPollingBot {
 			flagIncomeMap.put(e.getMessage().getChatId(), isIncome);
 		} else if (e.getMessage().getText().equals("Расход")) {
 			isConsumption = true;
-			flagConsumptionMap.put(e.getMessage().getChatId(), isIncome);
+			flagConsumptionMap.put(e.getMessage().getChatId(), isConsumption);
 		}
 		// ************************************************************************//
 		String text = null;

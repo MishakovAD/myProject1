@@ -5,5 +5,9 @@
 	<classpathentry kind="lib" path="C:/Program Files (x86)/MySQL/Connector J 8.0/mysql-connector-java-8.0.11.jar"/>
 	<classpathentry kind="lib" path="E:/Java/Libs/telegrambots-3.6.1-jar-with-dependencies.jar"/>
 	<classpathentry kind="lib" path="E:/Java/Libs/telegrambots-abilities-3.6.1-jar-with-dependencies.jar"/>
+	<classpathentry kind="lib" path="D:/JAVA/Libs/jsoup-1.11.3.jar"/>
+	<classpathentry kind="lib" path="D:/JAVA/Libs/telegrambots-3.6.1-jar-with-dependencies.jar"/>
+	<classpathentry kind="lib" path="D:/JAVA/Libs/telegrambots-abilities-3.6.1-jar-with-dependencies.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
