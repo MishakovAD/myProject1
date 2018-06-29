@@ -13,14 +13,19 @@ public class CostsBot extends TelegramLongPollingBot {
 	static Long chatId;
 	static String nameUser;
 	static ConcurrentHashMap<Long, ThreadForUser> chatIdThreadMap = new ConcurrentHashMap<>(); // потокобезопасное
-																								// хранилище всех
+																								// хранилище
+																								// всех
 																								// нитей,которые
 																								// запущены
 	ThreadForUser thread;
-	static ConcurrentHashMap<Long, Integer> counterMap = new ConcurrentHashMap<>(); // счетчик сообщений для каждого
+	static ConcurrentHashMap<Long, Integer> counterMap = new ConcurrentHashMap<>(); // счетчик
+																					// сообщений
+																					// для
+																					// каждого
 																					// пользователя
 
-	// хранилище флагов, нужно для того,чтобы правильно определять набор клавиатуры
+	// хранилище флагов, нужно для того,чтобы правильно определять набор
+	// клавиатуры
 	static ConcurrentHashMap<Long, Boolean> flagIncomeMap = new ConcurrentHashMap<>();
 	static ConcurrentHashMap<Long, Boolean> flagConsumptionMap = new ConcurrentHashMap<>();
 	public static boolean isIncome = false; // Доход
@@ -39,7 +44,7 @@ public class CostsBot extends TelegramLongPollingBot {
 	public void onUpdateReceived(Update e) {
 		// Различные проверки и заполнение необходимыми данными
 		// Типа флагов, или заполнение массива ответов пользователю
-		// ************************************************************************//
+		// *********************ФЛАГИ**НАЧАЛО**********************************//
 		if (CounterEvents.messages.isEmpty()) {
 			CounterEvents.addMessages();
 		}
@@ -50,44 +55,53 @@ public class CostsBot extends TelegramLongPollingBot {
 			isConsumption = true;
 			flagConsumptionMap.put(e.getMessage().getChatId(), isConsumption);
 		}
-		// ************************************************************************//
+		// *********************ФЛАГИ**КОНЕЦ**********************************//
 		String text = null;
 		chatId = e.getMessage().getChatId();
-		if (chatIdThreadMap.containsKey(chatId)) {
-			for (ConcurrentHashMap.Entry entry : chatIdThreadMap.entrySet()) {
-				if (chatId.equals(entry.getKey())) {
-					thread = (ThreadForUser) entry.getValue();
-					// ************************************************************************//
-					for (ConcurrentHashMap.Entry objCounter : counterMap.entrySet()) {
-						if (chatId.equals(objCounter.getKey())) {
-							Integer count = (Integer) objCounter.getValue();
-							count++;
-							text = CounterEvents.messages.get(count);
-							counterMap.put(chatId, count);
-						}
-					}
-					// ************************************************************************//
-					thread.setUpdate(e);
-					thread.setChatId(chatId);
-					// System.out.println(thread.getName());
-					sendMsg(e.getMessage(), text);
-				}
-			}
 
-		} else {
-			// ************************************************************************//
-			Integer count = 0;
-			counterMap.put(chatId, count);
-			text = CounterEvents.messages.get(count);
-			// ************************************************************************//
-			// System.out.println("Long.toString(chatId) = " + Long.toString(chatId));
-			thread = new ThreadForUser(Long.toString(chatId));
-			chatIdThreadMap.put(chatId, thread);
-			thread.setUpdate(e);
-			thread.setChatId(chatId);
-			thread.start();
-			sendMsg(e.getMessage(), text);
+		// Учим бота реагировать только на команды
+		// *****************COMMANDS**********************//
+		if (e.getMessage().getText().equals("/newCosts")) {
+			if (chatIdThreadMap.containsKey(chatId)) {
+				for (ConcurrentHashMap.Entry entry : chatIdThreadMap.entrySet()) {
+					if (chatId.equals(entry.getKey())) {
+						thread = (ThreadForUser) entry.getValue();
+						// **********СЧЕТЧИК СООБЩЕНИЙ НАЧАЛО****************//
+						//В зависимости от значения, выводит пользователю то или иное сообщение
+						for (ConcurrentHashMap.Entry objCounter : counterMap
+								.entrySet()) {
+							if (chatId.equals(objCounter.getKey())) {
+								Integer count = (Integer) objCounter.getValue();
+								count++;
+								text = CounterEvents.messages.get(count);
+								counterMap.put(chatId, count);
+							}
+						}
+						// **********СЧЕТЧИК СООБЩЕНИЙ КОНЕЦ****************//
+						thread.setUpdate(e);
+						thread.setChatId(chatId);
+						// System.out.println(thread.getName());
+						sendMsg(e.getMessage(), text);
+					}
+				}
+
+			} else {
+				// **********СЧЕТЧИК СООБЩЕНИЙ НАЧАЛО****************//
+				Integer count = 0;
+				counterMap.put(chatId, count);
+				text = CounterEvents.messages.get(count);
+				// **********СЧЕТЧИК СООБЩЕНИЙ КОНЕЦ****************//
+				// System.out.println("Long.toString(chatId) = " +
+				// Long.toString(chatId));
+				thread = new ThreadForUser(Long.toString(chatId));
+				chatIdThreadMap.put(chatId, thread);
+				thread.setUpdate(e);
+				thread.setChatId(chatId);
+				thread.start();
+				sendMsg(e.getMessage(), text);
+			}
 		}
+		// *****************COMMANDS*КОНЕЦ*****************//
 	}
 
 	@SuppressWarnings("deprecation")
@@ -95,7 +109,8 @@ public class CostsBot extends TelegramLongPollingBot {
 		SendMessage s = new SendMessage();
 		s.enableMarkdown(true);
 		// Обязательно строчку ниже менять на нормального бота!!!!
-		BotKeyboard.setButtons(s); // обращаемся к клавиатуре в классе // BotKeyboard
+		BotKeyboard.setButtons(s); // обращаемся к клавиатуре в классе //
+									// BotKeyboard
 		s.setChatId(msg.getChatId());
 
 		s.setText(text);
