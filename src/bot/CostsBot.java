@@ -98,7 +98,7 @@ public class CostsBot extends TelegramLongPollingBot {
 										counterMap.put(chatId, count);
 									}
 								}
-								// **********СЧЕТЧИК СООБЩЕНИЙ КОНЕЦ****************//
+								// **********СЧЕТЧИК СООБЩЕНИЙ*КОНЕЦ****************//
 								thread.setUpdate(e);
 								thread.setChatId(chatId);
 								sendMsg(e.getMessage(), text);

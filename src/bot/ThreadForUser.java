@@ -1,6 +1,8 @@
 package bot;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 
@@ -14,7 +16,7 @@ public class ThreadForUser extends Thread {
 	public ThreadForUser(String name) {
 		super(name);
 	}
-	
+
 	public void setChatId(Long chatId) {
 		this.chatId = chatId;
 	}
@@ -29,9 +31,7 @@ public class ThreadForUser extends Thread {
 
 	public void setUpdate(Update update) {
 		this.update = update;
-	}	
-	
-
+	}
 
 	public void run() {
 		Thread.currentThread().setName("Thread-" + getChatId().toString());
@@ -44,19 +44,31 @@ public class ThreadForUser extends Thread {
 					chatId = getChatId();
 					update = getUpdate();
 					message = update.getMessage();
-					textMessage.add(message.getText() + " / ");					
+					//Проверка на запятую. Т.к она не должна там появлятся
+					if (message.getText().contains(",")) {
+						textMessage.add(message.getText().replaceAll(",", "."));
+					} else if(message.getText().contains(" ")) {
+						textMessage.add(message.getText().replaceAll(" ", "."));
+					} else {
+						textMessage.add(message.getText());
+					}					
 					System.out.println(textMessage);
-					update = null;					
-					
-					//Все Тестовые классы поменять на обычные!
+					update = null;
+
+					// Все Тестовые классы поменять на обычные!
 					if (textMessage.size() == 5) {
-						// отправляем сообщение в БД (с записью ID), а так же очищаем массив
-						// textMessage.add(update.getMessage().getChatId().toString());
 						// sql
-						
+						try {
+							DataBase.addCost(chatId, textMessage.get(2),
+									textMessage.get(3),
+									textMessage.get(4));
+						} catch (NumberFormatException | InstantiationException
+								| IllegalAccessException | SQLException e) {
+							e.printStackTrace();
+						}
 						// sql
 						textMessage.removeAll(textMessage);
-						//ТЕСТОВЫЕ МЕНЯЕМ НА ОБЫЧНЫЕ И НАОБОРОТ
+						// ТЕСТОВЫЕ МЕНЯЕМ НА ОБЫЧНЫЕ И НАОБОРОТ
 						CostsBot.chatIdThreadMap.remove(chatId);
 						CostsBot.counterMap.remove(chatId);
 						CostsBot.flagConsumptionMap.remove(chatId);
@@ -65,15 +77,13 @@ public class ThreadForUser extends Thread {
 						isFinish = false;
 					}
 
-				} catch (IndexOutOfBoundsException e) {
-					// System.out.println(e);
-				} catch (NullPointerException e) {
+				} catch (IndexOutOfBoundsException | NullPointerException e) {
 					// System.out.println(e);
 				}
 
 			} else {
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

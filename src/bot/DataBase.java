@@ -10,10 +10,9 @@ import java.util.Date;
 
 public class DataBase {
 	private static String url = "jdbc:mysql://localhost:3306/costs_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-	private static String username = "root";
-	private static String password = "root";
+	private static String username = "user";
+	private static String password = "hedghog"; //для VPS
 	private static String nameUser;
-	private static String typeCost;
 
 	static boolean checkUser = false;
 
@@ -35,11 +34,11 @@ public class DataBase {
 		String SQL = "CREATE TABLE Costs " +
 				 "(id INTEGER not NULL AUTO_INCREMENT, " +
 				 " idFromTelegramBot INTEGER not NULL, " +
-				 " dateCreated DATE not NULL, " +
-				 " userName VARCHAR (50), " +
-				 " typeCost VARCHAR (50), " +
-				 " amount INTEGER not NULL, " +
-				 " cause VARCHAR (1000), " +
+				 " dateCreated DATETIME not NULL, " +
+				 " userName VARCHAR (100), " +
+				 " typeCost VARCHAR (100), " +
+				 " amount VARCHAR (50) not NULL, " +
+				 " cause VARCHAR (100), " +
 				 " PRIMARY KEY (id))";
 		
 		 statement.executeUpdate(SQL);
@@ -56,11 +55,7 @@ public class DataBase {
 		String SQL_select_all = "select * from costs;";
 		ResultSet rs = statement.executeQuery(SQL_select_all);
 		while (rs.next()) {
-			//Вывод данных (пока заккоменчен,чтобы не мешался)
-//			System.out.println("Данные: " + rs.getInt(1) + ", " + rs.getInt(2) + ", " + rs.getString(3) + ", "
-//					+ rs.getString(4) + ", " + rs.getInt(5) + ", " + rs.getString(6) + ", ");
 			if (id == rs.getInt(2)) {
-				//checkUser = true;
 				nameUser = rs.getString(4);
 				System.out.println(nameUser + ": Пользователь уже зарегестрирован!");
 				return true;
@@ -93,34 +88,20 @@ public class DataBase {
 		statement.execute(SQL_insert_new_user);
 	}
 
-	public static void addCost(String text) throws SQLException, InstantiationException, IllegalAccessException {
-		// Добавить и распарсить правильно дату,чтобы была возможность отслеживать дату
-		// регистрации пользователя
+	public static void addCost(Long id, String typeCost, String amount, String cause)
+			throws SQLException, InstantiationException, IllegalAccessException {
 		Connection con = DriverManager.getConnection(url, username, password);
 		System.out.println("Connected.");
 		Statement statement = null;
 		statement = con.createStatement();
-
-		// Получаем содержимое текста
-		//олучение данных поменять. Сейчас вид  другой. 
-		//Лучше вообще сделать отдельным методом или дажеклассом на обработку
-		String amount;
-		String cause;
-		int indexOfSpace = text.indexOf(" "); // индекс символа, разделяющего сумму и покупки
-		amount = text.substring(0, indexOfSpace);
-		cause = text.substring(5);
-		// Получение текущей даты и времени
-		String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-		System.out.println("Date: " + date);
 		
 		//Вопрос, где и как лучше получать имя. Сейчас, при вставке новой записи, или же потом, при выводе статистики
 		//Пока проверяю сейчас и вставляю методом
-		//typeCost, как и все остальное будем получать отдельным методом из массива, в который будем сохранять данные.
-		checkUser(CostsBot.chatId);
+		checkUser(id);
 		//Вместо переменной date попробуем функцию now(). Распознает или нет, увидим
 		String SQL_insert_cost = "insert into Costs (idFromTelegramBot, dateCreated, userName, "
 				+ "typeCost, amount, cause)" + " values ("
-				+ CostsBot.chatId + ", " + "now()" + ", '" 
+				+ id + ", " + "now()" + ", '" 
 				+ nameUser + "', '" + typeCost + "', "  + amount + ", '" + cause + "');";
 		statement.execute(SQL_insert_cost);
 	}
@@ -134,8 +115,9 @@ public class DataBase {
 		String SQL_select_all = "select * from costs;";
 		ResultSet rs = statement.executeQuery(SQL_select_all);
 		while (rs.next()) {
+			//1 элемент - это pk, а уже потом идет отсчет элементов
 			System.out.println("Данные: " + rs.getInt(1) + ", " + rs.getInt(2) + ", " + rs.getString(3) + ", "
-					+ rs.getString(4) + ", " + rs.getInt(5) + ", " + rs.getString(6) + ", ");
+					+ rs.getString(4) + ", " + rs.getString(5) + ", " + rs.getString(6) + ", "+ rs.getString(7) + ", ");
 		}
 	}
 
@@ -144,31 +126,9 @@ public class DataBase {
 			//connect();
 			//addCost("2000 Hohoho");
 			getDBData();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} catch (InstantiationException | IllegalAccessException | SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
 }
-
-// Код, который использовался ранее, но более не нужен
-
-//// Создание таблицы в БД
-// String SQL = "CREATE TABLE costs " +
-// "(id INTEGER not NULL AUTO_INCREMENT, " +
-// " IDFromTelegramBot INTEGER not NULL, " +
-// " DateCreated DATE not NULL, " +
-// " Name VARCHAR (50), " +
-// " Amount INTEGER not NULL, " +
-// " Cause VARCHAR (1000), " +
-// " PRIMARY KEY (id))";
-//
-// statement.executeUpdate(SQL);
-// System.out.println("Table successfully created...");
