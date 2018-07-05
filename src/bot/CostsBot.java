@@ -30,16 +30,19 @@ public class CostsBot extends TelegramLongPollingBot {
 	public static boolean isIncome = false; // Доход
 	public static boolean isConsumption = false; // Расход
 
+	@Override
 	public String getBotToken() {
 		// System.out.println("Ready! Token");
 		return "597710015:AAFvYu0rDwE0vYxhaPQ6gsSgiRLXqFUACK4";
 	}
 
+	@Override
 	public String getBotUsername() {
 		System.out.println("Ready! UserName");
 		return "forCosts_bot";
 	}
 
+	@Override
 	public void onUpdateReceived(Update e) {
 		// Различные проверки и заполнение необходимыми данными
 		// Типа флагов, или заполнение массива ответов пользователю
@@ -69,7 +72,7 @@ public class CostsBot extends TelegramLongPollingBot {
 				//Подумать, везде ли нужны проверки того ,что пользователь зарегестрирован
 				if (e.getMessage().getText().length() > 0 && !DataBase.checkUser(chatId)) {
 					nameUser = e.getMessage().getText();
-					DataBase.regNewUser();
+					DataBase.regNewUser(nameUser);
 					text = "Очень приятно, " + nameUser + "! \nЧтобы узнать список команд, введите \"/help\""
 							+ "\n Чтобы узнать подробнее о боте, введите \"/about\"";
 					sendMsg(e.getMessage(), text);
@@ -81,6 +84,8 @@ public class CostsBot extends TelegramLongPollingBot {
 					sendMsg(e.getMessage(), text);
 				} else if (e.getMessage().getText().equals("/statistic") && DataBase.checkUser(chatId)) {
 					System.out.println("Статистика");
+					sendMsg(e.getMessage(), DataBase.getDBData(chatId));
+					//DataBase.deleteDBData();
 				} else if (DataBase.checkUser(chatId)){
 					if (chatIdThreadMap.containsKey(chatId)) {
 						for (ConcurrentHashMap.Entry entry : chatIdThreadMap.entrySet()) {
@@ -140,7 +145,7 @@ public class CostsBot extends TelegramLongPollingBot {
 		SendMessage s = new SendMessage();
 		s.enableMarkdown(true);
 		// Обязательно строчку ниже менять на нормального бота!!!!
-		BotKeyboardTest.setButtons(s); // обращаемся к клавиатуре в классе //
+		BotKeyboard.setButtons(s); // обращаемся к клавиатуре в классе //
 										// BotKeyboard
 		s.setChatId(msg.getChatId());
 

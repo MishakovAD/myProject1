@@ -52,6 +52,7 @@ public class ClientTest extends Thread {
 		this.nameThread = nameThread;
 	}
 
+	@Override
 	public void run() {
 		final Long id = cliendId;
 		while (true) {

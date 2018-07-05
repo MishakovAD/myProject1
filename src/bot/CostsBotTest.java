@@ -1,6 +1,5 @@
 package bot;
 
-import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -26,16 +25,19 @@ public class CostsBotTest extends TelegramLongPollingBot {
 	public static boolean isIncome = false; // Доход
 	public static boolean isConsumption = false; // Расход
 
+	@Override
 	public String getBotToken() {
 		// System.out.println("Ready! Token");
 		return "597710015:AAFvYu0rDwE0vYxhaPQ6gsSgiRLXqFUACK4";
 	}
 
+	@Override
 	public String getBotUsername() {
 		System.out.println("Ready! UserName");
 		return "forCosts_bot";
 	}
 
+	@Override
 	public void onUpdateReceived(Update e) {
 		// Различные проверки и заполнение необходимыми данными
 		// Типа флагов, или заполнение массива ответов пользователю

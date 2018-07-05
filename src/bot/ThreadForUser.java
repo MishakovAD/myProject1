@@ -33,6 +33,7 @@ public class ThreadForUser extends Thread {
 		this.update = update;
 	}
 
+	@Override
 	public void run() {
 		Thread.currentThread().setName("Thread-" + getChatId().toString());
 		System.out.println("Start thread! " + Thread.currentThread().getName());
