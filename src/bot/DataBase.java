@@ -8,13 +8,13 @@ import java.sql.Statement;
 
 public class DataBase {
 	private static String url = "jdbc:mysql://localhost:3306/costs_db?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-	private static String username = "user";
-	private static String password = "hedghog"; // для VPS
+	private static String username = "***";
+	private static String password = "***"; // Г¤Г«Гї VPS
 	private static String nameUser;
 
 	static boolean checkUser = false;
 
-	// Для отдельного запуска работы с БД
+	// Г„Г«Гї Г®ГІГ¤ГҐГ«ГјГ­Г®ГЈГ® Г§Г ГЇГіГ±ГЄГ  Г°Г ГЎГ®ГІГ» Г± ГЃГ„
 	public static void connect() throws SQLException, InstantiationException, IllegalAccessException {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -22,13 +22,13 @@ public class DataBase {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		// Открываем соединение
+		// ГЋГІГЄГ°Г»ГўГ ГҐГ¬ Г±Г®ГҐГ¤ГЁГ­ГҐГ­ГЁГҐ
 		Connection con = DriverManager.getConnection(url, username, password);
 		System.out.println("Connected.");
 
 		Statement statement = null;
 		statement = con.createStatement();
-//	// Создание таблицы в БД
+//	// Г‘Г®Г§Г¤Г Г­ГЁГҐ ГІГ ГЎГ«ГЁГ¶Г» Гў ГЃГ„
 		String SQL = "CREATE TABLE Costs character set utf8" + "(id INTEGER not NULL AUTO_INCREMENT, "
 				+ " idFromTelegramBot INTEGER not NULL, " + " dateCreated DATETIME not NULL, "
 				+ " userName VARCHAR (100), " + " typeCost VARCHAR (100), " + " amount VARCHAR (50) not NULL, "
@@ -38,7 +38,7 @@ public class DataBase {
 		System.out.println("Table successfully created...");
 	}
 
-	// Проверка: зарегестрирован ли уже такой пользователь.
+	// ГЏГ°Г®ГўГҐГ°ГЄГ : Г§Г Г°ГҐГЈГҐГ±ГІГ°ГЁГ°Г®ГўГ Г­ Г«ГЁ ГіГ¦ГҐ ГІГ ГЄГ®Г© ГЇГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гј.
 	public static boolean checkUser(Long id) throws SQLException, InstantiationException, IllegalAccessException {
 		Connection con = DriverManager.getConnection(url, username, password);
 
@@ -50,7 +50,7 @@ public class DataBase {
 		while (rs.next()) {
 			if (id == rs.getInt(2)) {
 				nameUser = rs.getString(4);
-				System.out.println(nameUser + ": Пользователь уже зарегестрирован!");
+				System.out.println(nameUser + ": ГЏГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гј ГіГ¦ГҐ Г§Г Г°ГҐГЈГҐГ±ГІГ°ГЁГ°Г®ГўГ Г­!");
 				return true;
 			}
 
@@ -59,10 +59,10 @@ public class DataBase {
 	}
 
 	public static void regNewUser(String name) throws SQLException, InstantiationException, IllegalAccessException {
-		// Добавить и распарсить правильно дату,чтобы была возможность отслеживать дату
-		// регистрации пользователя
+		// Г„Г®ГЎГ ГўГЁГІГј ГЁ Г°Г Г±ГЇГ Г°Г±ГЁГІГј ГЇГ°Г ГўГЁГ«ГјГ­Г® Г¤Г ГІГі,Г·ГІГ®ГЎГ» ГЎГ»Г«Г  ГўГ®Г§Г¬Г®Г¦Г­Г®Г±ГІГј Г®ГІГ±Г«ГҐГ¦ГЁГўГ ГІГј Г¤Г ГІГі
+		// Г°ГҐГЈГЁГ±ГІГ°Г Г¶ГЁГЁ ГЇГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гї
 		Connection con = DriverManager.getConnection(url, username, password);
-		System.out.println("Регистрация нового пользователя!");
+		System.out.println("ГђГҐГЈГЁГ±ГІГ°Г Г¶ГЁГї Г­Г®ГўГ®ГЈГ® ГЇГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гї!");
 
 		Statement statement = null;
 		statement = con.createStatement();
@@ -85,21 +85,21 @@ public class DataBase {
 		Statement statement = null;
 		statement = con.createStatement();
 
-		// Вопрос, где и как лучше получать имя. Сейчас, при вставке новой записи, или
-		// же потом, при выводе статистики
-		// Пока проверяю сейчас и вставляю методом
+		// Г‚Г®ГЇГ°Г®Г±, ГЈГ¤ГҐ ГЁ ГЄГ ГЄ Г«ГіГ·ГёГҐ ГЇГ®Г«ГіГ·Г ГІГј ГЁГ¬Гї. Г‘ГҐГ©Г·Г Г±, ГЇГ°ГЁ ГўГ±ГІГ ГўГЄГҐ Г­Г®ГўГ®Г© Г§Г ГЇГЁГ±ГЁ, ГЁГ«ГЁ
+		// Г¦ГҐ ГЇГ®ГІГ®Г¬, ГЇГ°ГЁ ГўГ»ГўГ®Г¤ГҐ Г±ГІГ ГІГЁГ±ГІГЁГЄГЁ
+		// ГЏГ®ГЄГ  ГЇГ°Г®ГўГҐГ°ГїГѕ Г±ГҐГ©Г·Г Г± ГЁ ГўГ±ГІГ ГўГ«ГїГѕ Г¬ГҐГІГ®Г¤Г®Г¬
 		checkUser(id);
-		// Вместо переменной date попробуем функцию now(). Распознает или нет, увидим
+		// Г‚Г¬ГҐГ±ГІГ® ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г®Г© date ГЇГ®ГЇГ°Г®ГЎГіГҐГ¬ ГґГіГ­ГЄГ¶ГЁГѕ now(). ГђГ Г±ГЇГ®Г§Г­Г ГҐГІ ГЁГ«ГЁ Г­ГҐГІ, ГіГўГЁГ¤ГЁГ¬
 		String SQL_insert_cost = "insert into Costs (idFromTelegramBot, dateCreated, userName, "
 				+ "typeCost, amount, cause)" + " values (" + id + ", " + "now()" + ", '" + nameUser + "', '" + typeCost
 				+ "', " + amount + ", '" + cause + "');";
 		statement.execute(SQL_insert_cost);
 	}
 
-	// Получение всей информации из БД
+	// ГЏГ®Г«ГіГ·ГҐГ­ГЁГҐ ГўГ±ГҐГ© ГЁГ­ГґГ®Г°Г¬Г Г¶ГЁГЁ ГЁГ§ ГЃГ„
 	public static String getDBData(Long id) 
 			throws SQLException, InstantiationException, IllegalAccessException {
-		String costs = "Совершенные операции: \n";
+		String costs = "Г‘Г®ГўГҐГ°ГёГҐГ­Г­Г»ГҐ Г®ГЇГҐГ°Г Г¶ГЁГЁ: \n";
 		int summIncome = 0;
 		int summConsumption = 0;
 		int counter = 0;
@@ -111,33 +111,33 @@ public class DataBase {
 		+ id + " ORDER BY id DESC;";
 		ResultSet rs = statement.executeQuery(SQL_select_all);
 		while (rs.next()) {
-			// 1 элемент - это pk, а уже потом идет отсчет элементов
+			// 1 ГЅГ«ГҐГ¬ГҐГ­ГІ - ГЅГІГ® pk, Г  ГіГ¦ГҐ ГЇГ®ГІГ®Г¬ ГЁГ¤ГҐГІ Г®ГІГ±Г·ГҐГІ ГЅГ«ГҐГ¬ГҐГ­ГІГ®Гў
 			System.out.println(
-					"Данные: " + rs.getInt(1) + ", " + rs.getInt(2) + ", " + rs.getString(3) + ", " + rs.getString(4)
+					"Г„Г Г­Г­Г»ГҐ: " + rs.getInt(1) + ", " + rs.getInt(2) + ", " + rs.getString(3) + ", " + rs.getString(4)
 							+ ", " + rs.getString(5) + ", " + rs.getString(6) + ", " + rs.getString(7) + ", ");
 			costs += "\n";
-			costs += "Дата: " + rs.getString(3) + "\n" +
-					"Тип операции: " + rs.getString(5) + "\n" +
-					"Количество денег: " + rs.getString(6) + "\n" +
-					"Откуда/Куда: " + rs.getString(7) + "\n";
+			costs += "Г„Г ГІГ : " + rs.getString(3) + "\n" +
+					"Г’ГЁГЇ Г®ГЇГҐГ°Г Г¶ГЁГЁ: " + rs.getString(5) + "\n" +
+					"ГЉГ®Г«ГЁГ·ГҐГ±ГІГўГ® Г¤ГҐГ­ГҐГЈ: " + rs.getString(6) + "\n" +
+					"ГЋГІГЄГіГ¤Г /ГЉГіГ¤Г : " + rs.getString(7) + "\n";
 			costs += "\n";
 			try {
-				if (rs.getString(5).equalsIgnoreCase("Доход")) {
+				if (rs.getString(5).equalsIgnoreCase("Г„Г®ГµГ®Г¤")) {
 					summIncome += Float.valueOf(rs.getString(6));
-				} else if (rs.getString(5).equalsIgnoreCase("Расход")) {
+				} else if (rs.getString(5).equalsIgnoreCase("ГђГ Г±ГµГ®Г¤")) {
 					summConsumption += Float.valueOf(rs.getString(6));
 				}
 			} catch (Exception e) {
-				System.out.println("Не увдалось посчитать сумму");
+				System.out.println("ГЌГҐ ГіГўГ¤Г Г«Г®Г±Гј ГЇГ®Г±Г·ГЁГІГ ГІГј Г±ГіГ¬Г¬Гі");
 			}
 			counter++;
 			if (counter > 15) {
-				//Выводим только последние 15 записей
+				//Г‚Г»ГўГ®Г¤ГЁГ¬ ГІГ®Г«ГјГЄГ® ГЇГ®Г±Г«ГҐГ¤Г­ГЁГҐ 15 Г§Г ГЇГЁГ±ГҐГ©
 				break;
 			}
 		}
-		costs += "Всего потрачено: " + summConsumption + "\n";
-		costs += "Всего получено: " + summIncome;
+		costs += "Г‚Г±ГҐГЈГ® ГЇГ®ГІГ°Г Г·ГҐГ­Г®: " + summConsumption + "\n";
+		costs += "Г‚Г±ГҐГЈГ® ГЇГ®Г«ГіГ·ГҐГ­Г®: " + summIncome;
 		return costs;
 	}
 
